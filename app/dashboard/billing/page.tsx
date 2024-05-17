@@ -1,19 +1,19 @@
-import { StripeSubscriptionCreationButton } from "@/app/components/SubmitButtons";
+import { StripePortal, StripeSubscriptionCreationButton } from "@/app/components/SubmitButtons";
 import prisma from "@/app/lib/db";
 import { getStripeSession, stripe } from "@/app/lib/stripe";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { CheckCircle2 } from "lucide-react";
 import { redirect } from "next/navigation";
 
 
 const featureItems = [
-  { name: "Lorem Ipsum something" },
-  { name: "Lorem Ipsum something" },
-  { name: "Lorem Ipsum something" },
-  { name: "Lorem Ipsum something" },
-  { name: "Lorem Ipsum something" },
+  { name: "This is feature 1" },
+  { name: "This is feature 2" },
+  { name: "This is feature 3" },
+  { name: "This is feature 4" },
+  { name: "This is feature 5  " },
 ];
 
 async function getData(userId: string) {
@@ -67,7 +67,32 @@ export default async function page() {
 
       return redirect(subscriptionUrl);
     }
-
+    if(data?.status==='active'){
+      return (
+        <div className="grid items-start gap-8">
+          <div className="flex items-center justify-between px-2">
+            <h1>Subscription</h1>
+            <p>Settings regarding your subscription</p>
+          </div>
+          <Card className="w-full lg:w-2/3">
+            <CardHeader>
+              <CardTitle>Edit Subscription</CardTitle>
+              <CardDescription>
+                Click on the button below, this will give you the opportunity to
+                change your payment details and view your statement at the same
+                time.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form action={createCustomerPortal}>
+                <StripePortal />
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      );
+      
+    }
     async function createCustomerPortal() {
       "use server";
       const session = await stripe.billingPortal.sessions.create({
