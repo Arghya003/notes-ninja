@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { CheckCircle2 } from "lucide-react";
+import { unstable_noStore } from "next/cache";
 import { redirect } from "next/navigation";
 
 
@@ -17,7 +18,7 @@ const featureItems = [
 ];
 
 async function getData(userId: string) {
-  
+    unstable_noStore()
   const data = await prisma.subscription.findUnique({
     where: {
       userId: userId,
